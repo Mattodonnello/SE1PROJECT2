@@ -12,3 +12,5 @@
 
 //Function to print the board
 void print_board(square board[BOARD_SIZE][BOARD_SIZE]);
+void push(color p_color, PiecePtr *top);
+void pop(PiecePtr *top);

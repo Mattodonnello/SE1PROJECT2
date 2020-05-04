@@ -22,6 +22,15 @@ void push(color p_color, PiecePtr *top){
     (*top) = curr;
 }
 
+// Remove element from the top of the stack
+void pop(PiecePtr *top){
+    if(*top != NULL){
+        PiecePtr tempPtr = *top;
+        *top = (*top) -> next;
+        free(tempPtr);
+    }
+}
+
 void print_board(square board[BOARD_SIZE][BOARD_SIZE]){
     printf("****** The Board ******\n");
     for(int i = 0; i < BOARD_SIZE; i ++){

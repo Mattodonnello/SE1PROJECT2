@@ -14,7 +14,19 @@
  •Players should be characterized by: name, color, number of own pieces accumulated,
  number of adversary’s pieces capture */
 
+void printList( PiecePtr currentPtr )
+{
+        printf("|");
+        /* while not the end of the list */
+        while ( currentPtr != NULL ) {
+            if(currentPtr->p_color == RED) printf("R");
+            if(currentPtr->p_color == GREEN) printf("G");
+            printf( "%c-->", currentPtr->p_color );
+            currentPtr = currentPtr->next;
+        } /* end while */
 
+        printf( "NULL\t\t\t\t\t\t\t" );
+} /* end function printList */
 
 void initialize_players(player players[PLAYERS_NUM]) {
     int i, color_choice1, color_choice2;

@@ -29,63 +29,41 @@ void printList( PiecePtr currentPtr )
 } /* end function printList */
 
 void initialize_players(player players[PLAYERS_NUM]) {
-    int i, color_choice1, color_choice2;
+    int i, color_choice;
 
     for (i = 0; i < PLAYERS_NUM; i++) {
-        players[i].pieces_kept = 18;
-        players[i].pieces_captured = 0;
-        printf("Please enter Player %d name: ", i+1);
-        scanf("%s", players[i].players_name);
-    }
+            players[i].pieces_kept = 18;
+            players[i].pieces_captured = 0;
 
-        printf("\nEnter 1 if %s wants to use RED pieces or 2 if %s wants to use GREEN pieces:",
-                players[0].players_name, players[0].players_name);
-        scanf("%d", &color_choice1);
+            printf("Please enter Player %d name: ", i + 1);
+            scanf("%s", players[i].players_name);
+            printf("\nEnter 1 if %s wants to use RED pieces or 2 if %s wants to use GREEN pieces:",
+                   players[i].players_name, players[i].players_name);
+            scanf("%d", &color_choice);
 
-        switch (color_choice1) {
-            case 1:
-                players[0].player_color = RED;
-                printf("\n%s will use RED pieces. Initially %s has %d of his/her own pieces and %d of his/her opponents pieces\n\n",
-                       players[0].players_name, players[0].players_name, players[0].pieces_kept,
-                       players[0].pieces_captured);
-                break;
-            case 2:
+            if (color_choice < 1 || color_choice > 2) {
+                printf("ERROR PLEASE ENTER EITHER ONE OR TWO");
+                exit(0);
+            } else if (color_choice == 1) {
+                players[i].player_color = RED;
+            } else if (color_choice == 2) {
                 players[i].player_color = GREEN;
-                printf("\n%s will use GREEN pieces. Initially %s has %d of his/her own pieces and %d of his/her opponents pieces\n\n",
-                       players[0].players_name, players[0].players_name, players[0].pieces_kept,
-                       players[0].pieces_captured);
-                break;
-            default:
-                printf("ERROR, ENTRY INCORRECT Please enter either 1 or 2");
-                break;
+            }
+
+            if (players[i].player_color == RED) {
+                printf("\n%s will use RED pieces and initially has %d of his/her own pieces and %d of his/her opponents pieces\n\n",
+                       players[i].players_name, players[i].pieces_kept, players[i].pieces_captured);
+            } else if (players[i].player_color == GREEN) {
+                printf("\n%s will use GREEN pieces and initially has %d of his/her own pieces and %d of his/her opponents pieces\n\n",
+                       players[i].players_name, players[i].pieces_kept, players[i].pieces_captured);
+            }
+
         }
 
-        printf("Enter 1 if %s wants to use RED pieces or 2 if %s wants to use GREEN pieces:",
-               players[1].players_name, players[1].players_name);
-        scanf("%d", &color_choice2);
-
-        if(color_choice1 == color_choice2) {
-            printf("%s and %s cannot have the same colour pieces", players[0].players_name, players[1].players_name);
-            exit(0);
-        }
-
-        switch (color_choice2) {
-            case 1:
-                players[1].player_color = RED;
-                printf("\n%s will use RED pieces. Initially %s has %d of his/her own pieces and %d of his/her opponents pieces\n\n",
-                       players[1].players_name, players[1].players_name, players[1].pieces_kept,
-                       players[1].pieces_captured);
-                break;
-            case 2:
-                players[1].player_color = GREEN;
-                printf("\n%s will use GREEN pieces. Initially %s has %d of his/her own pieces and %d of his/her opponents pieces\n\n",
-                       players[1].players_name, players[1].players_name, players[1].pieces_kept,
-                       players[1].pieces_captured);
-                break;
-            default:
-                printf("ERROR, ENTRY INCORRECT Please enter either 1 or 2");
-                break;
-        }
+    if (players[0].player_color == players[1].player_color) {
+        printf("ERROR, PLAYERS CANNOT USE THE SAME COLOUR PIECE");
+        exit(0);
+    }
     }
 
 //Set Invalid Squares (where it is not possible to place stacks)

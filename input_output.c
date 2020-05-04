@@ -15,6 +15,13 @@
  * Valid squares with a GREEN piece are printed as | G |
  * Valid squares with a RED piece are printed as | R | */
 
+void push(color p_color, PiecePtr *top){
+    struct piece* curr = (PiecePtr)malloc(sizeof(struct piece));
+    curr -> p_color = p_color;
+    curr -> next = *top;
+    (*top) = curr;
+}
+
 void print_board(square board[BOARD_SIZE][BOARD_SIZE]){
     printf("****** The Board ******\n");
     for(int i = 0; i < BOARD_SIZE; i ++){

@@ -65,3 +65,6 @@ void initialize_players(player players[PLAYERS_NUM]);
 
 //Function to create the board
 void initialize_board(square board[BOARD_SIZE][BOARD_SIZE]);
+
+// Function to print the stacks i.e. linked list on each sqaure of the board
+void printList( PiecePtr currentPtr );

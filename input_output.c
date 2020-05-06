@@ -49,11 +49,13 @@ void print_board(square board[BOARD_SIZE][BOARD_SIZE]){
     }
 }
 
-    void over_five(square board[BOARD_SIZE][BOARD_SIZE], int k, int l) {
-        int count = 1;
+    void over_five(square board[BOARD_SIZE][BOARD_SIZE], player players[PLAYERS_NUM], int k, int l) {
+        int count = 1; // Initialise variable count
         piece *curr = board[k][l].stack;
         piece *last = NULL;
+        int count_red=0, count_green=0;
 
+        // Loop through stack and if we get to a 5th element we make that element equal to last
         while (curr != NULL) {
             if (count < 5) {
                 curr = curr->next;
@@ -62,14 +64,36 @@ void print_board(square board[BOARD_SIZE][BOARD_SIZE]){
                 last = curr;
             }
 
+            /* We remove pieces from the bottom of the stack, one by one. While doing this we keep track of the
+             * colours of the pieces we're removing and store these values */
             if (last != NULL) {
                 curr = curr->next;
                 while (curr != NULL) {
                     piece *toRemove = curr;
+                    if(toRemove->p_color == RED){
+                        count_red++;
+                    }
+                    else if(toRemove->p_color == GREEN){
+                        count_green++;
+                    }
                     curr = curr->next;
                     free(toRemove);
                 }
                 last->next = NULL;
+            }
+        }
+
+        /* We store excess stack pieces that we removed in our pieces_kept and pieces_captured by each player
+         * obviously making sure that the players are capturing opponents pieces and keeping their own */
+        for(int x=0; x<PLAYERS_NUM; x++){
+        if(board[k][l].stack->p_color == RED && players[x].player_color == RED){
+            players[x].pieces_kept+=count_red;
+            players[x].pieces_captured+=count_green;
+        }
+
+            if(board[k][l].stack->p_color == GREEN && players[x].player_color == GREEN){
+                players[x].pieces_kept+=count_green;
+                players[x].pieces_captured+=count_red;
             }
         }
     }

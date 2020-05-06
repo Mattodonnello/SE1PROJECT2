@@ -1,22 +1,26 @@
-//
-// Created by Lili on 26/03/2020.
-//
-
-//
-// Created by Lili on 24/03/2020.
-//
-
 #include <stdio.h>
+#include <stdlib.h>
 #include "input_output.h"
 
-/* FUnction to print the board:
- * Invalid Squares are printed as | - |
- * Valid empty squares are printed as |   |
- * Valid squares with a GREEN piece are printed as | G |
- * Valid squares with a RED piece are printed as | R | */
+// Function to push one element to the top of a stack
+void push(color p_color, PiecePtr *top){
+    struct piece* curr = (PiecePtr)malloc(sizeof(struct piece));
+    curr -> p_color = p_color;
+    curr -> next = *top;
+    (*top) = curr;
+}
 
+// Function to remove one element from the top of the stack
+void pop(PiecePtr *top){
+    if(*top != NULL){
+        PiecePtr tempPtr = *top;
+        *top = (*top) -> next;
+        free(tempPtr);
+    }
+}
+
+// Function to merge two stacks placing one on top of the other
 void stacks(square board[BOARD_SIZE][BOARD_SIZE], int i, int j, int k, int l) {
-
     piece *top = board[i][j].stack;
     board[i][j].stack = NULL;
     board[i][j].num_pieces = 0;
@@ -26,29 +30,11 @@ void stacks(square board[BOARD_SIZE][BOARD_SIZE], int i, int j, int k, int l) {
     }
     curr->next = board[k][l].stack;
     board[k][l].stack = top;
-
 }
 
-void print_board(square board[BOARD_SIZE][BOARD_SIZE]){
-    printf("****** The Board ******\n");
-    for(int i = 0; i < BOARD_SIZE; i ++){
-        for (int j = 0; j < BOARD_SIZE; j++){
-            if(board[i][j].type == VALID) {
-                if(board[i][j].stack == NULL)
-                    printf("|   ");
-                else{
-                    if (board[i][j].stack->p_color == GREEN)
-                        printf("| G ");
-                    else printf("| R ");
-                }
-            }
-            else
-                printf("| - ");
-        }
-        printf("|\n");
-    }
-}
-
+/* Our function over_five makes sure our squares don't exceed 5 pieces. If our squares do exceed 5 pieces, the pieces
+ * are removed from the bottom. We keep track of each piece removed storing it in pieces_kept/pieces_captured by
+ * each opponent. */
     void over_five(square board[BOARD_SIZE][BOARD_SIZE], player players[PLAYERS_NUM], int k, int l) {
         int count = 1; // Initialise variable count
         piece *curr = board[k][l].stack;
@@ -98,6 +84,52 @@ void print_board(square board[BOARD_SIZE][BOARD_SIZE]){
         }
     }
 
+/* FUnction to print the board:
+ * Invalid Squares are printed as | - |
+ * Valid empty squares are printed as |   |
+ * Valid squares with a GREEN piece are printed as | G |
+ * Valid squares with a RED piece are printed as | R | */
+// I edited this slightly to allow for sizeable stacks, also adding function print_list to print more than one element
+        void print_board(square board[BOARD_SIZE][BOARD_SIZE]){
+    printf("****** The Board ******\n");
+    for(int i = 0; i < BOARD_SIZE; i ++){
+        for (int j = 0; j < BOARD_SIZE; j++){
+            if(board[i][j].type == VALID) {
+                if(board[i][j].stack == NULL)
+                    printf("|\t\t\t\t\t\t\t\t\t\t");
+                else{
+                    if (board[i][j].stack->p_color == GREEN && board[i][j].stack->next == NULL)
+                        printf("| G\t\t\t\t\t\t\t\t\t\t");
+                    if (board[i][j].stack->p_color == RED && board[i][j].stack->next == NULL)
+                         printf("| R\t\t\t\t\t\t\t\t\t\t");
+                    else if(board[i][j].stack->next != NULL){
+                        printList(board[i][j].stack);
+                }
+            }
+            }
+            else
+                printf("| -\t\t\t\t\t\t\t\t\t\t");
+        }
+        printf("|\n");
+    }
+}
+
+/* Function size_stack keeps a track of the size of our stack. This will be useful when determining how many places
+ * we can move the stack up, down, left or right in function make_move */
+int size_stack(square board[BOARD_SIZE][BOARD_SIZE], int i, int j) {
+    int count = 0;
+    piece *curr = board[i][j].stack;
+    while (curr != NULL) {
+        if (count < 5) {
+            curr = curr->next;
+            count++;
+        }
+    }
+        return count;
+}
+
+
+// Function make_move essentially runs our game prompting players to make moves on the board
 void make_move(square board[BOARD_SIZE][BOARD_SIZE], player players[PLAYERS_NUM]) {
     int i, j, k = 0, l = 0;
     int sumk = 0, suml = 0;
@@ -113,8 +145,8 @@ void make_move(square board[BOARD_SIZE][BOARD_SIZE], player players[PLAYERS_NUM]
 
     while (validation == 1) {
         for (int x = 0; x < PLAYERS_NUM; x++) {
-            
-            /* The Following code I have commented is the code I was trying to use to allow players to put the pieces they'd kept
+
+  /* The Following code I have commented is the code I was trying to use to allow players to put the pieces they'd kept
    * back into the game so they could keep playing. This code also would have determined who lost the game. Unfortunately
    * this code kept returning a segmentation fault and I couldn't figure out why. Therefore I commented it so that the
    * game still ran but a winner was not found*/
@@ -164,7 +196,8 @@ if (count3 == 0 && players[x].player_color == GREEN && players[x].pieces_kept ==
 printf("%s (Player %d), Has Lost the game", players[x].players_name, x + 1);
 exit(0);
 } */
-            
+
+
             // Each Player is prompted to enter the column and row of the piece/stack they want to move
             printf("\n%s, please enter the row of the piece/stack you want to move: ", players[x].players_name);
             scanf("%d", &i);

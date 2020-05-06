@@ -1,11 +1,3 @@
-//
-// Created by Lili on 26/03/2020.
-//
-
-//
-// Created by Lili on 24/03/2020.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "gameinit.h"
@@ -14,6 +6,7 @@
  •Players should be characterized by: name, color, number of own pieces accumulated,
  number of adversary’s pieces capture */
 
+// Function to print the squares with more than one piece i.e. print the linked list
 void printList( PiecePtr currentPtr )
 {
         printf("|");
@@ -28,28 +21,39 @@ void printList( PiecePtr currentPtr )
         printf( "NULL\t\t\t\t\t\t\t" );
 } /* end function printList */
 
+
+/* Function to define the  players. Players are characterized by: name, color, number of own pieces accumulated and
+ * number of adversary’s pieces captured. */
 void initialize_players(player players[PLAYERS_NUM]) {
     int i, color_choice;
 
+    /* Loop through each player and get the name, color, number of own pieces accumulated and
+    * number of adversary’s pieces captured. */
     for (i = 0; i < PLAYERS_NUM; i++) {
-            players[i].pieces_kept = 18;
+            players[i].pieces_kept = 0;
             players[i].pieces_captured = 0;
 
+            // Prompt Player 1/2 to enter their name
             printf("Please enter Player %d name: ", i + 1);
             scanf("%s", players[i].players_name);
+        // Prompt Player 1/2 to enter their desired piece colour
             printf("\nEnter 1 if %s wants to use RED pieces or 2 if %s wants to use GREEN pieces:",
                    players[i].players_name, players[i].players_name);
             scanf("%d", &color_choice);
 
             if (color_choice < 1 || color_choice > 2) {
-                printf("ERROR PLEASE ENTER EITHER ONE OR TWO");
+                printf("ERROR, INVALID ENTRY, PLEASE2 ENTER EITHER ONE OR TWO");
                 exit(0);
-            } else if (color_choice == 1) {
+            }
+            else if (color_choice == 1) {
                 players[i].player_color = RED;
-            } else if (color_choice == 2) {
+            }
+            else if (color_choice == 2) {
                 players[i].player_color = GREEN;
             }
 
+            /* Print the colours each player is using, their names, the number of their own pieces accumulated and the
+             * number of pieces they've captured from their opponent */
             if (players[i].player_color == RED) {
                 printf("\n%s will use RED pieces and initially has %d of his/her own pieces and %d of his/her opponents pieces\n\n",
                        players[i].players_name, players[i].pieces_kept, players[i].pieces_captured);
@@ -60,11 +64,14 @@ void initialize_players(player players[PLAYERS_NUM]) {
 
         }
 
+    // Print error warning if the opponents try to select the same piece and terminate the program
     if (players[0].player_color == players[1].player_color) {
         printf("ERROR, PLAYERS CANNOT USE THE SAME COLOUR PIECE");
         exit(0);
     }
     }
+
+
 
 //Set Invalid Squares (where it is not possible to place stacks)
 void set_invalid(square * s){
@@ -98,6 +105,7 @@ s->stack->next = NULL;
 s->num_pieces = 1;
 }
 
+
 //initializes the board
 void initialize_board(square board [BOARD_SIZE][BOARD_SIZE]){
 
@@ -127,7 +135,5 @@ void initialize_board(square board [BOARD_SIZE][BOARD_SIZE]){
 
 
     }
-
-
 }
 

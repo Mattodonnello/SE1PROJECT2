@@ -49,6 +49,30 @@ void print_board(square board[BOARD_SIZE][BOARD_SIZE]){
     }
 }
 
+    void over_five(square board[BOARD_SIZE][BOARD_SIZE], int k, int l) {
+        int count = 1;
+        piece *curr = board[k][l].stack;
+        piece *last = NULL;
+
+        while (curr != NULL) {
+            if (count < 5) {
+                curr = curr->next;
+                count++;
+            } else {
+                last = curr;
+            }
+
+            if (last != NULL) {
+                curr = curr->next;
+                while (curr != NULL) {
+                    piece *toRemove = curr;
+                    curr = curr->next;
+                    free(toRemove);
+                }
+                last->next = NULL;
+            }
+        }
+    }
 
 void make_move(square board[BOARD_SIZE][BOARD_SIZE], player players[PLAYERS_NUM]) {
     int i, j, k, l;

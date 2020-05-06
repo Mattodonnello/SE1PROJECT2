@@ -113,6 +113,58 @@ void make_move(square board[BOARD_SIZE][BOARD_SIZE], player players[PLAYERS_NUM]
 
     while (validation == 1) {
         for (int x = 0; x < PLAYERS_NUM; x++) {
+            
+            /* The Following code I have commented is the code I was trying to use to allow players to put the pieces they'd kept
+   * back into the game so they could keep playing. This code also would have determined who lost the game. Unfortunately
+   * this code kept returning a segmentation fault and I couldn't figure out why. Therefore I commented it so that the
+   * game still ran but a winner was not found*/
+
+  /* for (p = 0; p < BOARD_SIZE; p++) {
+               for (q = 0; q < BOARD_SIZE; q++) {
+
+if (board[p][q].type == VALID && board[p][q].stack->p_color == RED) {
+count2++;
+}
+
+if (board[p][q].type == VALID && board[p][q].stack->p_color == GREEN) {
+count3++;
+}
+}
+} */
+
+/*
+if (count2 == 0 && players[x].player_color == RED && players[x].pieces_kept != 0) {
+printf("Please pick the row of a square on the board to reenter one of your kept pieces onto:");
+scanf("%d", &a);
+printf("Please pick the row of a square on the board to reenter one of your kept pieces onto:");
+scanf("%d", &b);
+push(players[x].player_color, &board[a][b].stack);
+over_five(board, players, a, b);
+print_board(board);
+players[x].pieces_kept--;
+}
+
+if (count3 == 0 && players[x].player_color == GREEN && players[x].pieces_kept != 0) {
+printf("Please pick the row of a square on the board to reenter one of your kept pieces onto:");
+scanf("%d", &c);
+printf("Please pick the row of a square on the board to reenter one of your kept pieces onto:");
+scanf("%d", &d);
+push(players[x].player_color, &board[c][d].stack);
+over_five(board, players, c, d);
+print_board(board);
+players[x].pieces_kept--;
+}
+
+if (count2 == 0 && players[x].player_color == RED && players[x].pieces_kept == 0) {
+printf("%s (Player %d), Has Lost the game", players[x].players_name, x + 1);
+exit(0);
+}
+
+if (count3 == 0 && players[x].player_color == GREEN && players[x].pieces_kept == 0) {
+printf("%s (Player %d), Has Lost the game", players[x].players_name, x + 1);
+exit(0);
+} */
+            
             // Each Player is prompted to enter the column and row of the piece/stack they want to move
             printf("\n%s, please enter the row of the piece/stack you want to move: ", players[x].players_name);
             scanf("%d", &i);

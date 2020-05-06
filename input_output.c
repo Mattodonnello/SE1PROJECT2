@@ -99,59 +99,94 @@ void print_board(square board[BOARD_SIZE][BOARD_SIZE]){
     }
 
 void make_move(square board[BOARD_SIZE][BOARD_SIZE], player players[PLAYERS_NUM]) {
-    int i, j, k, l;
+    int i, j, k = 0, l = 0;
+    int sumk = 0, suml = 0;
     int choice, validation;
+    int count = 0;
+    int count2 = 0;
+    int count3 = 0;
+    int a, b, c, d;
+    int p, q;
+    // We prompt the players to answer whether or not they want to play our game
     printf("\nWould you like to play the game (ENTER 1 FOR YES, ANY OTHER NUMBER FOR NO): ");
     scanf("%d", &validation);
 
     while (validation == 1) {
         for (int x = 0; x < PLAYERS_NUM; x++) {
-            printf("\n%s, please enter the row of the piece you want to move: ", players[x].players_name);
+            // Each Player is prompted to enter the column and row of the piece/stack they want to move
+            printf("\n%s, please enter the row of the piece/stack you want to move: ", players[x].players_name);
             scanf("%d", &i);
-            printf("\n%s, Please enter the column of the piece you want to move: ", players[x].players_name);
+            printf("\n%s, Please enter the column of the piece/stack you want to move: ", players[x].players_name);
             scanf("%d", &j);
-            printf("\n%s, Please enter whether you would like to move the stack/piece up, down, left or right.\nEnter 1 for up, 2 for down, 3 for left or 4 for right:",players[x].players_name);
-            scanf("%d", &choice);
 
-            if (choice == 1){
-                k = i-1;
-                l = j;
-            }
-            if (choice == 2){
-                k = i+1;
-                l = j;
-            }
-            if (choice == 3){
-                k = i;
-                l = j-1;
-            }
-            if (choice == 4){
-                k = i;
-                l = j+1;
+            /* If either player tries to move their piece/stack to an invalid square an Error will occur and the program
+             * will be terminated */
+            if ((i == 0 && (j == 0 || j == 1 || j == 6 || j == 7)) ||
+                (i == 1 && (j == 0 || j == 7)) ||
+                (i == 6 && (j == 0 || j == 7)) ||
+                (i == 7 && (j == 0 || j == 1 || j == 6 || j == 7))) {
+                printf("ERROR, INVALID SQUARE WAS CHOSEN\n");
+                exit(0);
             }
 
-            if((k==0 && (l ==0 || l==1 || l==6 || l==7)) ||
-               (k==1 && (l==0 || l==7)) ||
-               (k==6 && (l==0 || l==7)) ||
-               (k==7 && (l==0 || l==1 || l==6 || l==7)))
-            {
-                printf("ERROR, Move to invalid square");
-                break;
-            }
-
+            /* If either player tries to move a piece/stack which doesn't contain their piece, as the top piece, an Error
+             * will occur and the program will be terminated */
             if (board[i][j].stack->p_color != players[x].player_color) {
-                printf("ERROR please enter a square where your color is actually present and is the top piece of the stack");
-                break;
+                printf("ERROR, YOUR SQUARE COLOUR IS NOT PRESENT OR IS NOT THE TOP OF THE STACK\n");
+                exit(0);
             }
 
+            // We keep track of the size of each stack
+            count = size_stack(board, i, j);
 
-            push(board[i][j].stack->p_color, &board[k][l].stack);
-            pop(&board[i][j].stack);
+            /* We get the user to enter the number of moves they wish to make. This corresponds to the size of the stack
+             * they're moving */
+            for (int z = 0; z < count; z++) {
+
+                printf("\n%s, Please enter whether you would like to move the stack/piece up, down, left or right.\nEnter 1 for up, 2 for down, 3 for left or 4 for right:",
+                       players[x].players_name);
+                scanf("%d", &choice);
+
+                if (choice == 1) {
+                    k = i - 1;
+                    l = j;
+                }
+                if (choice == 2) {
+                    k = i + 1;
+                    l = j;
+                }
+                if (choice == 3) {
+                    k = i;
+                    l = j - 1;
+                }
+                if (choice == 4) {
+                    k = i;
+                    l = j + 1;
+                } else if (choice < 1 || choice > 4) {
+                    printf("ERROR, Choice not appropriate");
+                    exit(0);
+                }
+
+                if ((k == 0 && (l == 0 || l == 1 || l == 6 || l == 7)) ||
+                    (k == 1 && (l == 0 || l == 7)) ||
+                    (k == 6 && (l == 0 || l == 7)) ||
+                    (k == 7 && (l == 0 || l == 1 || l == 6 || l == 7))) {
+                    printf("ERROR, Move to invalid square");
+                    exit(0);
+                }
+
+                sumk += k;
+                suml += l;
+            }
+            stacks(board, i, j, sumk - ((count - 1) * i), suml - ((count - 1) * j));
+            over_five(board, players, sumk - ((count - 1) * i), suml - ((count - 1) * j));
             print_board(board);
+            sumk = 0;
+            suml = 0;
         }
     }
 
-    while (validation != 1){
+    while (validation != 1) {
         printf("PLAYERS HAVE CHOSEN NOT TO PLAY THE GAME");
         exit(0);
     }

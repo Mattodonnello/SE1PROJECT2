@@ -15,20 +15,18 @@
  * Valid squares with a GREEN piece are printed as | G |
  * Valid squares with a RED piece are printed as | R | */
 
-void push(color p_color, PiecePtr *top){
-    struct piece* curr = (PiecePtr)malloc(sizeof(struct piece));
-    curr -> p_color = p_color;
-    curr -> next = *top;
-    (*top) = curr;
-}
+void stacks(square board[BOARD_SIZE][BOARD_SIZE], int i, int j, int k, int l) {
 
-// Remove element from the top of the stack
-void pop(PiecePtr *top){
-    if(*top != NULL){
-        PiecePtr tempPtr = *top;
-        *top = (*top) -> next;
-        free(tempPtr);
+    piece *top = board[i][j].stack;
+    board[i][j].stack = NULL;
+    board[i][j].num_pieces = 0;
+    piece *curr = top;
+    while (curr->next != NULL) {
+        curr = curr->next;
     }
+    curr->next = board[k][l].stack;
+    board[k][l].stack = top;
+
 }
 
 void print_board(square board[BOARD_SIZE][BOARD_SIZE]){

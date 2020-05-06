@@ -1,7 +1,3 @@
-//
-// Created by Lili on 24/03/2020.
-//
-
 #ifndef FOCUS_GAME_INIT_H
 #define FOCUS_GAME_INIT_H
 
@@ -36,14 +32,13 @@ typedef struct player{
 
 // A piece
 typedef struct piece {
-    //the color associated with a piece
-    color p_color;
-
-    // This is a pointer to the next pieces
-    // to create a stack. For this lab you do not have to think too much about it.
-    struct piece * next;
+    color p_color;   //the color associated with a piece
+    struct piece * next; // This is a pointer to the next pieces to create a stack.
 
 }piece;
+
+typedef struct piece Piece;
+typedef Piece *PiecePtr;
 
 // A Square of the board
 typedef struct square {
@@ -58,13 +53,12 @@ typedef struct square {
 
 }square;
 
-// YOU ADD Functionality to print the number of pieces that are placed in each square of the board
-
 //Function to create the players
 void initialize_players(player players[PLAYERS_NUM]);
 
 //Function to create the board
 void initialize_board(square board[BOARD_SIZE][BOARD_SIZE]);
 
-// Function to print the stacks i.e. linked list on each sqaure of the board
-void printList( PiecePtr currentPtr );
+
+// Function to print the stacks i.e. linked list on each square of the board
+void printList( PiecePtr currentPtr);
